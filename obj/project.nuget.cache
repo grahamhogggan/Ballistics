@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "nceKZFL5+GE=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\hogga\\Documents\\Projects\\Ballistics\\Ballistics.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\hogga\\.nuget\\packages\\microsoft.win32.systemevents\\9.0.7\\microsoft.win32.systemevents.9.0.7.nupkg.sha512",
+    "C:\\Users\\hogga\\.nuget\\packages\\system.drawing.common\\9.0.7\\system.drawing.common.9.0.7.nupkg.sha512"
+  ],
+  "logs": []
+}

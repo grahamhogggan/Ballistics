@@ -1,0 +1,96 @@
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Collections.Generic;
+
+public class Window : Form
+{
+    private List<Pixel> pixels;
+    public Window()
+    {
+        this.Size = new Size(400, 300); // Set form size
+        this.Paint += new PaintEventHandler(MyForm_Paint); // Attach Paint event
+        this.pixels = new List<Pixel>();
+        Button btn = new Button { Text = "Generate", Location = new System.Drawing.Point(10, 10), Size = new Size(150, 20) };
+        btn.Click += generate;
+        this.Controls.Add(btn);
+        this.Size = new Size(1000, 600);
+        this.FormBorderStyle = FormBorderStyle.FixedSingle; // Fixed border, non-resizable
+        this.MaximizeBox = false; // Disable maximize button
+        // Optional: Disable minimize button if needed
+        this.MinimizeBox = false; // Uncomment to disable minimize button
+        // Optional: Set a specific size
+    }
+    private void generate(object sender, System.EventArgs e)
+    {
+        drawLine(100, 100, -100, -100);
+        drawLine(50, 50, 50, 0);
+    }
+
+    private void MyForm_Paint(object? sender, PaintEventArgs e)
+    {
+        Graphics g = e.Graphics;
+
+        // Create a pen for outlines and a brush for filling
+        using (Pen pen = new Pen(Color.Black, 2))
+        using (SolidBrush brush = new SolidBrush(Color.Red))
+        {
+            /*
+            // Draw a line
+            g.DrawLine(pen, 50, 50, 200, 50);
+
+            // Draw a rectangle
+            g.DrawRectangle(pen, 50, 70, 150, 100);
+
+            // Fill a circle
+            g.FillEllipse(brush, 50, 180, 50, 50);
+            */
+            foreach (Pixel p in pixels)
+            {
+                //Console.WriteLine("P");
+                g.FillRectangle(brush, p.x, p.y, 1, 1);
+            }
+        }
+    }
+    [STAThread]
+    static void Main()
+    {
+        Application.Run(new Window());
+    }
+    public void AddPixel(Pixel p)
+    {
+        pixels.Add(p);
+        this.Invalidate();
+    }
+    private Pixel Plot(int X, int Y)
+    {
+        return new Pixel(500 + X, 300 - Y);
+    }
+    private List<Pixel> makeLine(double x1, double y1, double x2, double y2)
+    {
+        List<Pixel> line = new List<Pixel>();
+
+        if (x1 == x2)
+        {
+            for (int y = (int)Math.Min(y1,y2); y < Math.Max(y1,y2); y++)
+            {
+                line.Add(Plot((int)x1, y));
+
+            }
+            return line;
+        }
+        double slope = (y1 - y2) / (x1 - x2);
+        for (double d = 0; d < 1; d += 0.001)
+        {
+            line.Add(Plot((int)(x1 + (x2 - x1) * d), (int)(y1 + d * slope * (y2 - y1))));
+        }
+        return line;
+    }
+    private void drawLine(double x1, double y1, double x2, double y2)
+    {
+        foreach (Pixel p in makeLine(x1, y1, x2, y2))
+        {
+            AddPixel(p);
+        }
+    }
+}

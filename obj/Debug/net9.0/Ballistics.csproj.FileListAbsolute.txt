@@ -1,0 +1,15 @@
+C:\Users\hogga\Documents\Projects\Ballistics\bin\Debug\net9.0\Ballistics.exe
+C:\Users\hogga\Documents\Projects\Ballistics\bin\Debug\net9.0\Ballistics.deps.json
+C:\Users\hogga\Documents\Projects\Ballistics\bin\Debug\net9.0\Ballistics.runtimeconfig.json
+C:\Users\hogga\Documents\Projects\Ballistics\bin\Debug\net9.0\Ballistics.dll
+C:\Users\hogga\Documents\Projects\Ballistics\bin\Debug\net9.0\Ballistics.pdb
+C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0\Ballistics.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0\Ballistics.AssemblyInfoInputs.cache
+C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0\Ballistics.AssemblyInfo.cs
+C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0\Ballistics.csproj.CoreCompileInputs.cache
+C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0\Ballistics.dll
+C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0\refint\Ballistics.dll
+C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0\Ballistics.pdb
+C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0\Ballistics.genruntimeconfig.cache
+C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0\ref\Ballistics.dll
+C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0\Ballistics.csproj.AssemblyReference.cache
