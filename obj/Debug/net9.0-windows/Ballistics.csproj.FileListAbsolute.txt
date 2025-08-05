@@ -18,3 +18,4 @@ C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0-windows\refint\Bal
 C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0-windows\Ballistics.pdb
 C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0-windows\Ballistics.genruntimeconfig.cache
 C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0-windows\ref\Ballistics.dll
+C:\Users\hogga\Documents\Projects\Ballistics\obj\Debug\net9.0-windows\Ballistics.sourcelink.json

@@ -23,8 +23,8 @@ public class Window : Form
     }
     private void generate(object sender, System.EventArgs e)
     {
-        drawLine(100, 100, -100, -100);
-        drawLine(50, 50, 50, 0);
+        drawLine(100, 100, -100, -100, 1);
+        drawLine(50, 50, 50, 0, 2);
     }
 
     private void MyForm_Paint(object? sender, PaintEventArgs e)
@@ -66,29 +66,41 @@ public class Window : Form
     {
         return new Pixel(500 + X, 300 - Y);
     }
-    private List<Pixel> makeLine(double x1, double y1, double x2, double y2)
+    private List<Pixel> makeLine(double x1, double y1, double x2, double y2, int thickness)
     {
         List<Pixel> line = new List<Pixel>();
 
         if (x1 == x2)
         {
-            for (int y = (int)Math.Min(y1,y2); y < Math.Max(y1,y2); y++)
+            for (int y = (int)Math.Min(y1, y2); y < Math.Max(y1, y2); y++)
             {
                 line.Add(Plot((int)x1, y));
 
             }
-            return line;
         }
-        double slope = (y1 - y2) / (x1 - x2);
-        for (double d = 0; d < 1; d += 0.001)
+        else
         {
-            line.Add(Plot((int)(x1 + (x2 - x1) * d), (int)(y1 + d * slope * (y2 - y1))));
+            double slope = (y1 - y2) / (x1 - x2);
+            for (double d = 0; d < 1; d += 0.001)
+            {
+                line.Add(Plot((int)(x1 + (x2 - x1) * d), (int)(y1 + d * slope * (y2 - y1))));
+            }
         }
-        return line;
+
+        List<Pixel> thickened = [.. line];
+        for (int i = 1; i < thickness; i++)
+        {
+            foreach (Pixel p in line)
+            {
+                thickened.Add(new Pixel(p.x + i, p.y));
+                thickened.Add(new Pixel(p.x - i, p.y));
+            }
+        }
+        return thickened;
     }
-    private void drawLine(double x1, double y1, double x2, double y2)
+    private void drawLine(double x1, double y1, double x2, double y2, int thickness)
     {
-        foreach (Pixel p in makeLine(x1, y1, x2, y2))
+        foreach (Pixel p in makeLine(x1, y1, x2, y2, thickness))
         {
             AddPixel(p);
         }
