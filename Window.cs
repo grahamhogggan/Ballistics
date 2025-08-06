@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Security.Principal;
 
 public class Window : Form
 {
@@ -30,12 +31,15 @@ public class Window : Form
         this.MinimizeBox = false; // Uncomment to disable minimize button
         // Optional: Set a specific size
     }
-    private void generate(object sender, System.EventArgs e)
+    private void generate(object? sender, System.EventArgs e)
     {
         if (int.TryParse(numInput.Text, out int n))
         {
             Clear();
-                    sketchFunction(new Quadratic(-1*n, 0, 0));
+            drawLine(-500, 0, 500, 0, 1);
+            drawLine(0, -500, 0, 500, 1);
+
+            sketchFunction(new Quadratic(-1 * n, 0, 0));
         }
     }
 
@@ -76,7 +80,7 @@ public class Window : Form
     }
     private Pixel Plot(float X, float Y)
     {
-        return new Pixel(500 + (int)(X*xScale), 300 - (int)(Y*yScale));
+        return new Pixel(500 + (int)(X * xScale), 300 - (int)(Y * yScale));
     }
     private void Clear()
     {
@@ -97,7 +101,7 @@ public class Window : Form
         else
         {
             double slope = (y1 - y2) / (x1 - x2);
-            for (double d = 0; d < 1; d += 0.001)
+            for (double d = 0; d < 1; d += 1/(Math.Abs((x2-x1))*xScale*2))
             {
                 line.Add(Plot((float)(x1 + (x2 - x1) * d), (float)(y1 + d * slope * (y2 - y1))));
             }
@@ -110,6 +114,8 @@ public class Window : Form
             {
                 thickened.Add(new Pixel(p.x + i, p.y));
                 thickened.Add(new Pixel(p.x - i, p.y));
+                thickened.Add(new Pixel(p.x, p.y+i));
+                thickened.Add(new Pixel(p.x, p.y-i));
             }
         }
         return thickened;
