@@ -23,8 +23,7 @@ public class Window : Form
     }
     private void generate(object sender, System.EventArgs e)
     {
-        drawLine(100, 100, -100, -100, 1);
-        drawLine(50, 50, 50, 0, 2);
+        sketchFunction(new Quadratic(1, 6, 5));
     }
 
     private void MyForm_Paint(object? sender, PaintEventArgs e)
@@ -102,6 +101,14 @@ public class Window : Form
     {
         foreach (Pixel p in makeLine(x1, y1, x2, y2, thickness))
         {
+            AddPixel(p);
+        }
+    }
+    private void sketchFunction(Function f)
+    {
+        for (double i = -200; i < 200; i+=0.1)
+        {
+            Pixel p = Plot((int)i, (int)f.Evaluate((float)i));
             AddPixel(p);
         }
     }
