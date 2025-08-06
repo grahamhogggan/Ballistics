@@ -10,6 +10,9 @@ public class Window : Form
     private MaskedTextBox numInput;
     private float xScale = 30;
     private float yScale = 1;
+    private float YOffset = 0;
+    private float XOffset = 0;
+
     public Window()
     {
         this.Size = new Size(400, 300); // Set form size
@@ -20,8 +23,8 @@ public class Window : Form
         this.Controls.Add(btn);
 
         numInput = new MaskedTextBox { Location = new System.Drawing.Point(10, 40) };
-        numInput.Text = "00001";
-        numInput.Mask = "00000";
+        numInput.Text = "0001";
+        numInput.Mask = "0000";
         Controls.Add(numInput);
 
         this.Size = new Size(1000, 600);
@@ -29,7 +32,36 @@ public class Window : Form
         this.MaximizeBox = false; // Disable maximize button
         // Optional: Disable minimize button if needed
         this.MinimizeBox = false; // Uncomment to disable minimize button
-        // Optional: Set a specific size
+                                  // Optional: Set a specific size
+        this.KeyPreview = true;
+        this.KeyDown += MovementListener;
+    }
+    private void MovementListener(object? sender, System.Windows.Forms.KeyEventArgs e)
+    {
+        if (e.KeyCode == Keys.G || e.KeyCode == Keys.Enter)
+        {
+            generate(sender, e);
+        }
+        if (e.KeyCode == Keys.W)
+        {
+            YOffset += 100;
+            generate(sender, e);
+        }
+        if (e.KeyCode == Keys.S)
+        {
+            YOffset -= 100;
+            generate(sender, e);
+        }
+        if (e.KeyCode == Keys.A)
+        {
+            XOffset+= 100;
+            generate(sender, e);
+        }
+        if (e.KeyCode == Keys.D)
+        {
+            XOffset -= 100;
+            generate(sender, e);
+        }
     }
     private void generate(object? sender, System.EventArgs e)
     {
@@ -80,7 +112,7 @@ public class Window : Form
     }
     private Pixel Plot(float X, float Y)
     {
-        return new Pixel(500 + (int)(X * xScale), 300 - (int)(Y * yScale));
+        return new Pixel((int)(500 +X * xScale+XOffset), (int)(300 - (Y * yScale)+YOffset));
     }
     private void Clear()
     {
@@ -101,7 +133,7 @@ public class Window : Form
         else
         {
             double slope = (y1 - y2) / (x1 - x2);
-            for (double d = 0; d < 1; d += 1/(Math.Abs((x2-x1))*xScale*2))
+            for (double d = 0; d < 1; d += 1 / (Math.Abs((x2 - x1)) * xScale * 2))
             {
                 line.Add(Plot((float)(x1 + (x2 - x1) * d), (float)(y1 + d * slope * (y2 - y1))));
             }
@@ -114,8 +146,8 @@ public class Window : Form
             {
                 thickened.Add(new Pixel(p.x + i, p.y));
                 thickened.Add(new Pixel(p.x - i, p.y));
-                thickened.Add(new Pixel(p.x, p.y+i));
-                thickened.Add(new Pixel(p.x, p.y-i));
+                thickened.Add(new Pixel(p.x, p.y + i));
+                thickened.Add(new Pixel(p.x, p.y - i));
             }
         }
         return thickened;
