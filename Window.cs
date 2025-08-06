@@ -6,6 +6,9 @@ using System.Collections.Generic;
 public class Window : Form
 {
     private List<Pixel> pixels;
+    private MaskedTextBox numInput;
+    private float xScale = 30;
+    private float yScale = 1;
     public Window()
     {
         this.Size = new Size(400, 300); // Set form size
@@ -14,6 +17,12 @@ public class Window : Form
         Button btn = new Button { Text = "Generate", Location = new System.Drawing.Point(10, 10), Size = new Size(150, 20) };
         btn.Click += generate;
         this.Controls.Add(btn);
+
+        numInput = new MaskedTextBox { Location = new System.Drawing.Point(10, 40) };
+        numInput.Text = "00001";
+        numInput.Mask = "00000";
+        Controls.Add(numInput);
+
         this.Size = new Size(1000, 600);
         this.FormBorderStyle = FormBorderStyle.FixedSingle; // Fixed border, non-resizable
         this.MaximizeBox = false; // Disable maximize button
@@ -23,7 +32,11 @@ public class Window : Form
     }
     private void generate(object sender, System.EventArgs e)
     {
-        sketchFunction(new Quadratic(1, 6, 5));
+        if (int.TryParse(numInput.Text, out int n))
+        {
+            Clear();
+                    sketchFunction(new Quadratic(-1*n, 0, 0));
+        }
     }
 
     private void MyForm_Paint(object? sender, PaintEventArgs e)
@@ -61,9 +74,13 @@ public class Window : Form
         pixels.Add(p);
         this.Invalidate();
     }
-    private Pixel Plot(int X, int Y)
+    private Pixel Plot(float X, float Y)
     {
-        return new Pixel(500 + X, 300 - Y);
+        return new Pixel(500 + (int)(X*xScale), 300 - (int)(Y*yScale));
+    }
+    private void Clear()
+    {
+        pixels.Clear();
     }
     private List<Pixel> makeLine(double x1, double y1, double x2, double y2, int thickness)
     {
@@ -73,7 +90,7 @@ public class Window : Form
         {
             for (int y = (int)Math.Min(y1, y2); y < Math.Max(y1, y2); y++)
             {
-                line.Add(Plot((int)x1, y));
+                line.Add(Plot((float)x1, y));
 
             }
         }
@@ -82,7 +99,7 @@ public class Window : Form
             double slope = (y1 - y2) / (x1 - x2);
             for (double d = 0; d < 1; d += 0.001)
             {
-                line.Add(Plot((int)(x1 + (x2 - x1) * d), (int)(y1 + d * slope * (y2 - y1))));
+                line.Add(Plot((float)(x1 + (x2 - x1) * d), (float)(y1 + d * slope * (y2 - y1))));
             }
         }
 
@@ -106,9 +123,9 @@ public class Window : Form
     }
     private void sketchFunction(Function f)
     {
-        for (double i = -200; i < 200; i+=0.1)
+        for (double i = -200; i < 200; i += 0.01)
         {
-            Pixel p = Plot((int)i, (int)f.Evaluate((float)i));
+            Pixel p = Plot((float)i, f.Evaluate((float)i));
             AddPixel(p);
         }
     }
