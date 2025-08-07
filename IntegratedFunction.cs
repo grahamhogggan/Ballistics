@@ -1,55 +1,87 @@
+using System;
 using System.Collections.Generic;
+
 public class IntegratedFunction : Function
 {
     private Function f;
     public float initialValue;
 
-    private Dictionary<float, float> tableOfValues;
+    private SortedDictionary<float, float> tableOfValues;
+    private List<float> sortedKeys;
+
+    public IntegratedFunction(Function f, float initialValue = 0f)
+    {
+        this.f = f;
+        this.initialValue = initialValue;
+        tableOfValues = new SortedDictionary<float, float>();
+        sortedKeys = new List<float>();
+
+        BuildTable(-300, 300, 1f);
+    }
+
+    private void BuildTable(float min, float max, float step)
+    {
+        float sum = initialValue;
+        tableOfValues[0] = initialValue;
+        sortedKeys.Add(0);
+
+        // Forward fill
+        for (float x = step; x <= max; x += step)
+        {
+            sum += step * f.Evaluate(x - step / 2);
+            tableOfValues[x] = sum;
+            sortedKeys.Add(x);
+        }
+
+        // Backward fill
+        sum = initialValue;
+        for (float x = -step; x >= min; x -= step)
+        {
+            sum -= step * f.Evaluate(x + step / 2);
+            tableOfValues[x] = sum;
+            sortedKeys.Insert(0, x); // add to beginning to keep sorted
+        }
+    }
+
     public override float Evaluate(float x)
     {
-        float start = Closest(x);
+        float start = ClosestKey(x);
         float sum = tableOfValues[start];
-        float stepSize = (float)Math.Max(Math.Abs(start -x) / 1000, 0.01);
-        if (x < start)
+
+        float stepSize = Math.Max(Math.Abs(x - start) / 1000f, 0.01f);
+
+        if (x > start)
         {
-            for (float i = x; i < start; i += stepSize)
-            {
-                sum -= stepSize * f.Evaluate(i);
-            }
+            for (float i = start; i < x; i += stepSize)
+                sum += stepSize * f.Evaluate(i + stepSize / 2);
         }
         else
         {
-            for (float i = start; i < x; i += stepSize)
-            {
-                sum += stepSize * f.Evaluate(i);
-            }
+            for (float i = x; i < start; i += stepSize)
+                sum -= stepSize * f.Evaluate(i + stepSize / 2);
         }
-        return sum;
 
+        return sum;
     }
-    public IntegratedFunction(Function f)
+
+    private float ClosestKey(float x)
     {
-        this.f = f;
-        tableOfValues = new Dictionary<float, float>();
-        tableOfValues.Add(0, initialValue);
-        for (int i = -300; i < 300; i++)
-        {
-            if(i!=0)
-            tableOfValues.Add(i, Evaluate(i));
-        }
-    }
-    private float Closest(float x)
-    {
-        float c = 0;
-        foreach (float f in tableOfValues.Keys)
-        {
-            if (Math.Abs(f - x) < Math.Abs(c - x))
-            {
-                c = f;
-            }
-        }
-        //if(x%1==0)
-        //Console.WriteLine("Closest to " + x + " is " + c+", which was found to return "+tableOfValues[c]);
-        return c;
+        int index = sortedKeys.BinarySearch(x);
+
+        if (index >= 0)
+            return sortedKeys[index]; // exact match
+
+        index = ~index; // insertion point
+
+        if (index == 0)
+            return sortedKeys[0];
+
+        if (index >= sortedKeys.Count)
+            return sortedKeys[^1];
+
+        float lower = sortedKeys[index - 1];
+        float upper = sortedKeys[index];
+
+        return Math.Abs(x - lower) < Math.Abs(x - upper) ? lower : upper;
     }
 }
