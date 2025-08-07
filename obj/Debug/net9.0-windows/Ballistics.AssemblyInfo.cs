@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Ballistics")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c07cb0a2d8b3aaab2943a9999198a23d6ef5ef79")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+84f15206a4c62b5a3573e7945e872911e5264f10")]
 [assembly: System.Reflection.AssemblyProductAttribute("Ballistics")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Ballistics")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

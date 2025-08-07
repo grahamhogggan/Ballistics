@@ -70,8 +70,12 @@ public class Window : Form
             Clear();
             drawLine(-500, 0, 500, 0, 1);
             drawLine(0, -500, 0, 500, 1);
-
-            sketchFunction(new IntegratedFunction(new Quadratic(-9.8f + n, 0, 0)));
+            AccelerationFunction a = new AccelerationFunction();
+            a.profiles.Add(new ThrustProfile(0,5,15));
+            a.profiles.Add(new ThrustProfile(7, 3, 15));
+            IntegratedFunction v = new IntegratedFunction(a);
+            IntegratedFunction s = new IntegratedFunction(v);
+            sketchFunction(s);
         }
     }
 
