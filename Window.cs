@@ -71,7 +71,7 @@ public class Window : Form
             drawLine(-500, 0, 500, 0, 1);
             drawLine(0, -500, 0, 500, 1);
 
-            sketchFunction(new Quadratic(-1 * n, 0, 0));
+            sketchFunction(new IntegratedFunction(new Quadratic(-9.8f + n, 0, 0)));
         }
     }
 
