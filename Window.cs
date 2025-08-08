@@ -70,12 +70,10 @@ public class Window : Form
             Clear();
             drawLine(-500, 0, 500, 0, 1);
             drawLine(0, -500, 0, 500, 1);
-            AccelerationFunction a = new AccelerationFunction();
-            a.profiles.Add(new ThrustProfile(0,5,15));
-            a.profiles.Add(new ThrustProfile(7, 3, 15));
-            IntegratedFunction v = new IntegratedFunction(a);
-            IntegratedFunction s = new IntegratedFunction(v);
-            sketchFunction(s);
+            StagedRocket rocket = new StagedRocket();
+            RocketStage stage1 = new RocketStage(1000, 10000, 10);
+            rocket.AddStage(stage1,0);
+            sketchFunction(rocket.positionFunction);
         }
     }
 
