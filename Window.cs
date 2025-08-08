@@ -83,6 +83,8 @@ public class Window : Form
             RocketStage flea = new RocketStage(2940, 80000, 7.5f);
             rocket.AddStage(flea, 0);
             rocket.AddStage(flea, 30);
+            rocket.AddStage(flea, 50);
+            rocket.AddStage(flea, 65);
             sketchFunction(rocket.positionFunction);
         }
     }
