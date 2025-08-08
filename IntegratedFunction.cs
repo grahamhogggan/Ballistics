@@ -16,7 +16,7 @@ public class IntegratedFunction : Function
         tableOfValues = new SortedDictionary<float, float>();
         sortedKeys = new List<float>();
 
-        BuildTable(-300, 300, 1f);
+        BuildTable(-300, 300, 0.5f);
     }
 
     private void BuildTable(float min, float max, float step)

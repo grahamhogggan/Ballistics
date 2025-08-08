@@ -9,7 +9,7 @@ public class Window : Form
     private List<Pixel> pixels;
     private MaskedTextBox numInput;
     private float xScale = 30;
-    private float yScale = 1;
+    private float yScale = 0.5f;
     private float YOffset = 0;
     private float XOffset = 0;
 
@@ -35,6 +35,15 @@ public class Window : Form
                                   // Optional: Set a specific size
         this.KeyPreview = true;
         this.KeyDown += MovementListener;
+        this.MouseWheel += Zoom;
+    }
+    private void Zoom(object? sender, System.Windows.Forms.MouseEventArgs e)
+    {
+        int movement = e.Delta / 120;
+        xScale *= (1 + movement * 0.1f);
+        yScale *= (1 + movement * 0.1f);
+        generate(sender, e);
+        Invalidate();
     }
     private void MovementListener(object? sender, System.Windows.Forms.KeyEventArgs e)
     {
@@ -54,7 +63,7 @@ public class Window : Form
         }
         if (e.KeyCode == Keys.A)
         {
-            XOffset+= 100;
+            XOffset += 100;
             generate(sender, e);
         }
         if (e.KeyCode == Keys.D)
@@ -71,8 +80,9 @@ public class Window : Form
             drawLine(-500, 0, 500, 0, 1);
             drawLine(0, -500, 0, 500, 1);
             StagedRocket rocket = new StagedRocket();
-            RocketStage stage1 = new RocketStage(1000, 10000, 10);
-            rocket.AddStage(stage1,0);
+            RocketStage flea = new RocketStage(2940, 80000, 7.5f);
+            rocket.AddStage(flea, 0);
+            rocket.AddStage(flea, 30);
             sketchFunction(rocket.positionFunction);
         }
     }
@@ -114,7 +124,7 @@ public class Window : Form
     }
     private Pixel Plot(float X, float Y)
     {
-        return new Pixel((int)(500 +X * xScale+XOffset), (int)(300 - (Y * yScale)+YOffset));
+        return new Pixel((int)(500 + X * xScale + XOffset), (int)(300 - (Y * yScale) + YOffset));
     }
     private void Clear()
     {
@@ -126,7 +136,7 @@ public class Window : Form
 
         if (x1 == x2)
         {
-            for (int y = (int)Math.Min(y1, y2); y < Math.Max(y1, y2); y++)
+            for (float y = (int)Math.Min(y1, y2); y < Math.Max(y1, y2); y += (float)Math.Abs(y1 - y2) / 1000)
             {
                 line.Add(Plot((float)x1, y));
 
