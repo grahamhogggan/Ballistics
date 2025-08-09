@@ -7,25 +7,33 @@ using System.Security.Principal;
 public class Window : Form
 {
     private List<Pixel> pixels;
-    private MaskedTextBox numInput;
     private float xScale = 30;
     private float yScale = 0.5f;
     private float YOffset = 0;
     private float XOffset = 0;
+    private List<MaskedTextBox> thrustTextBoxes = new List<MaskedTextBox>();
+    private List<MaskedTextBox> massTextBoxes = new List<MaskedTextBox>();
 
+    private List<MaskedTextBox> durationTextBoxes = new List<MaskedTextBox>();
+
+    private List<MaskedTextBox> delayTextBoxes = new List<MaskedTextBox>();
+    private int boxCount = 0;
     public Window()
     {
         this.Size = new Size(400, 300); // Set form size
         this.Paint += new PaintEventHandler(MyForm_Paint); // Attach Paint event
         this.pixels = new List<Pixel>();
         Button btn = new Button { Text = "Generate", Location = new System.Drawing.Point(10, 10), Size = new Size(150, 20) };
+        Button plus = new Button { Text = "Add Stage", Location = new System.Drawing.Point(180, 10), Size = new Size(150, 20) };
+        plus.Click += AddtextBox;
         btn.Click += generate;
+        this.Controls.Add(plus);
         this.Controls.Add(btn);
 
-        numInput = new MaskedTextBox { Location = new System.Drawing.Point(10, 40) };
-        numInput.Text = "0001";
-        numInput.Mask = "0000";
-        Controls.Add(numInput);
+        //numInput = new MaskedTextBox { Location = new System.Drawing.Point(10, 40) };
+        //numInput.Text = "0001";
+        //numInput.Mask = "0000";
+        //Controls.Add(numInput);
 
         this.Size = new Size(1000, 600);
         this.FormBorderStyle = FormBorderStyle.FixedSingle; // Fixed border, non-resizable
@@ -36,6 +44,32 @@ public class Window : Form
         this.KeyPreview = true;
         this.KeyDown += MovementListener;
         this.MouseWheel += Zoom;
+
+
+
+    }
+    private void AddtextBox(object? sender, System.EventArgs e)
+    {
+        MaskedTextBox delayBox = new MaskedTextBox { Location = new System.Drawing.Point(10, 50 + 80 * boxCount) };
+        delayTextBoxes.Add(delayBox);
+        delayBox.Mask = "000s";
+        MaskedTextBox thrustBox = new MaskedTextBox { Location = new System.Drawing.Point(30, 50 + 80 * boxCount + 40), Size = new Size(50, 20) };
+        MaskedTextBox massBox = new MaskedTextBox { Location = new System.Drawing.Point(80, 50 + 80 * boxCount + 40), Size = new Size(50, 20) };
+        MaskedTextBox durationBox = new MaskedTextBox { Location = new System.Drawing.Point(130, 50 + 80 * boxCount + 40), Size = new Size(50, 20) };
+        thrustTextBoxes.Add(thrustBox);
+        massTextBoxes.Add(massBox);
+        durationTextBoxes.Add(durationBox);
+
+        thrustBox.Mask = "000000N";
+        massBox.Mask = "00000Kg";
+        durationBox.Mask = "000s";
+        Controls.Add(delayBox);
+        Controls.Add(thrustBox);
+        Controls.Add(massBox);
+        Controls.Add(durationBox);
+
+        Invalidate();
+        boxCount++;
     }
     private void Zoom(object? sender, System.Windows.Forms.MouseEventArgs e)
     {
@@ -71,20 +105,54 @@ public class Window : Form
             XOffset -= 100;
             generate(sender, e);
         }
+        if (e.KeyCode == Keys.P)
+        {
+            AddtextBox(sender, e);
+        }
     }
     private void generate(object? sender, System.EventArgs e)
     {
-        if (int.TryParse(numInput.Text, out int n))
+        if (true)
         {
             Clear();
             drawLine(-500, 0, 500, 0, 1);
             drawLine(0, -500, 0, 500, 1);
+
             StagedRocket rocket = new StagedRocket();
+            /*
             RocketStage flea = new RocketStage(2940, 80000, 7.5f);
             rocket.AddStage(flea, 0);
             rocket.AddStage(flea, 30);
             rocket.AddStage(flea, 50);
             rocket.AddStage(flea, 65);
+            */
+            int totalDelay = 0;
+            for (int i = 0; i < delayTextBoxes.Count; i++)
+            {
+                string deStr = delayTextBoxes[i].Text.Replace("s", "");
+                string tStr = thrustTextBoxes[i].Text.Replace("N", "");
+                string mStr = massTextBoxes[i].Text.Replace("Kg", "");
+                string duStr = durationTextBoxes[i].Text.Replace("s", "");
+                if (int.TryParse(deStr, out int delay) && int.TryParse(duStr, out int duration) && int.TryParse(tStr, out int thrust) && int.TryParse(mStr, out int mass))
+                {
+                    RocketStage stage = new RocketStage(mass, thrust, duration);
+                    rocket.AddStage(stage, delay + totalDelay);
+                    totalDelay += delay;
+                }
+                else
+                {
+                    Console.WriteLine("strings were invalid");
+                    Console.Write(deStr);
+                    Console.Write(",");
+                    Console.Write(tStr);
+                    Console.Write(",");
+
+                    Console.Write(mStr);
+                    Console.Write(",");
+
+                    Console.Write(duStr);
+                }
+            }
             sketchFunction(rocket.positionFunction);
         }
     }
