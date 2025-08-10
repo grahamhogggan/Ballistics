@@ -18,6 +18,8 @@ public class Window : Form
 
     private List<MaskedTextBox> delayTextBoxes = new List<MaskedTextBox>();
     private int boxCount = 0;
+
+    private Label apogeeText;
     public Window()
     {
         this.Size = new Size(400, 300); // Set form size
@@ -29,6 +31,8 @@ public class Window : Form
         btn.Click += generate;
         this.Controls.Add(plus);
         this.Controls.Add(btn);
+        apogeeText = new Label { Text = "Apogee: N/A", Location = new System.Drawing.Point(700, 10), Size = new Size(150, 20)  };
+        this.Controls.Add(apogeeText);
 
         //numInput = new MaskedTextBox { Location = new System.Drawing.Point(10, 40) };
         //numInput.Text = "0001";
@@ -154,6 +158,18 @@ public class Window : Form
                 }
             }
             sketchFunction(rocket.positionFunction);
+            //sketchFunction(rocket.velocityFunction);
+            float apogee = 0;
+            for (int i = 1; i < 10; i ++)
+            {
+                float attempt = rocket.velocityFunction.getZero(i);
+                if (rocket.positionFunction.Evaluate(attempt)>apogee)
+                {
+                    apogee = rocket.positionFunction.Evaluate(attempt);
+                }
+            }
+            apogeeText.Text = "Apogee: " + (int)apogee;
+            Console.WriteLine(apogee);
         }
     }
 
